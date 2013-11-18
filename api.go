@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"expvar"
 	"fmt"
-	"github.com/dotcloud/docker/archive"
 	"github.com/dotcloud/docker/auth"
 	"github.com/dotcloud/docker/utils"
 	"github.com/gorilla/mux"
@@ -20,7 +19,6 @@ import (
 	"net/http"
 	"net/http/pprof"
 	"os"
-	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
@@ -915,25 +913,6 @@ func postBuild(srv *Server, version float64, w http.ResponseWriter, r *http.Requ
 
 	if remoteURL == "" {
 		context = r.Body
-	} else if utils.IsGIT(remoteURL) {
-		if !strings.HasPrefix(remoteURL, "git://") {
-			remoteURL = "https://" + remoteURL
-		}
-		root, err := ioutil.TempDir("", "docker-build-git")
-		if err != nil {
-			return err
-		}
-		defer os.RemoveAll(root)
-
-		if output, err := exec.Command("git", "clone", remoteURL, root).CombinedOutput(); err != nil {
-			return fmt.Errorf("Error trying to use git: %s (%s)", err, output)
-		}
-
-		c, err := archive.Tar(root, archive.Bzip2)
-		if err != nil {
-			return err
-		}
-		context = c
 	} else if utils.IsURL(remoteURL) {
 		f, err := utils.Download(remoteURL)
 		if err != nil {
