@@ -51,6 +51,10 @@ What's new
    **New!** This endpoint now returns build status as json stream. In case
    of a build error, it returns the exit status of the failed command.
 
+.. http:post:: /images/load
+
+  **New!** It's now possible to load an image from a remote url.
+
 
 v1.7
 ****

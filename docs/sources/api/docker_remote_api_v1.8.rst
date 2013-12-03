@@ -1219,6 +1219,7 @@ Load a tarball with a set of images and tags into docker
 
           HTTP/1.1 200 OK
 
+        :query fromSrc: source to load, - means stdin
         :statuscode 200: no error
         :statuscode 500: server error
 
